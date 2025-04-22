@@ -3,6 +3,9 @@ APP_NAME=springboot-demo
 DOCKER_IMAGE=springboot-demo
 DOCKER_COMPOSE_FILE=docker-compose.yml
 
+# Tell make that these are phony targets (always run them)
+.PHONY: build docker-build up down logs clean help
+
 # Targets
 
 # Build Spring Boot JAR
