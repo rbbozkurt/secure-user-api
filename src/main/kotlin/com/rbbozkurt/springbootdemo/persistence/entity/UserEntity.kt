@@ -31,5 +31,7 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    var roles: Set<RoleEntity> = emptySet()
+
+    var roles: MutableSet<RoleEntity> = mutableSetOf()
+
 )

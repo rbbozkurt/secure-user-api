@@ -1,40 +1,50 @@
 package com.rbbozkurt.springbootdemo.mapper
 
-import com.rbbozkurt.springbootdemo.dto.UserCreateRequestDto
-import com.rbbozkurt.springbootdemo.dto.UserDto
-import com.rbbozkurt.springbootdemo.dto.UserUpdateRequestDto
+import com.rbbozkurt.springbootdemo.dto.*
 import com.rbbozkurt.springbootdemo.persistence.entity.RoleEntity
 import com.rbbozkurt.springbootdemo.persistence.entity.UserEntity
 import org.mapstruct.*
+import java.time.LocalDateTime
 
-@Mapper(
-    componentModel = "spring",
-    uses = [RoleMapper::class]
-)
-interface UserMapper {
+@Mapper(componentModel = "spring")
+abstract class UserMapper {
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = ["mapRoleToName"])
-    fun toDto(user: UserEntity): UserDto
+    fun toDto(user: UserEntity): UserDto {
+        return UserDto(
+            id = user.id,
+            username = user.username,
+            email = user.email,
+            createdAt = user.createdAt,
+            lastPasswordUpdate = user.lastPasswordUpdate,
+            roles = user.roles.map { it.name }.toSet()
+        )
+    }
 
-    @Named("mapRoleToName")
-    fun mapRoleToName(role: RoleEntity): String = role.name
+    fun toEntity(dto: UserCreateRequestDto, roles: Set<RoleEntity>): UserEntity {
+        return UserEntity(
+            username = dto.username,
+            password = dto.password,
+            email = dto.email,
+            roles = roles.toMutableSet()
+        )
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "lastPasswordUpdate", ignore = true)
-    @Mapping(target = "roles", source = "roles")
-    fun toEntity(dto: UserCreateRequestDto, roles: Set<RoleEntity>): UserEntity
+    fun mergeToEntity(existingUser: UserEntity, updateDto: UserUpdateRequestDto, roles: Set<RoleEntity>): UserEntity {
+        updateDto.username?.let { existingUser.username = it }
+        updateDto.password?.let {
+            existingUser.password = it
+            existingUser.lastPasswordUpdate = LocalDateTime.now()
+        }
+        updateDto.email?.let { existingUser.email = it }
+        if (roles.isNotEmpty()) {
+            existingUser.roles = roles.toMutableSet()
+        }
+        return existingUser
+    }
 
-    @Mapping(target = "id", source = "existingUser.id")
-    @Mapping(target = "username", source = "updateDto.username", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "password", source = "updateDto.password", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "email", source = "updateDto.email", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "createdAt", source = "existingUser.createdAt")
-    @Mapping(target = "lastPasswordUpdate", expression = "java(updateDto.getPassword() != null ? java.time.LocalDateTime.now() : existingUser.getLastPasswordUpdate())")
-    @Mapping(target = "roles", source = "roles", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    fun mergeToEntity(existingUser: UserEntity, updateDto: UserUpdateRequestDto, roles: Set<RoleEntity>): UserEntity
+    fun mapRolesToNames(roles: Set<RoleEntity>?): Set<String> {
+        return roles?.map { it.name }?.toSet() ?: emptySet()
+    }
 
-    // Fixed annotation - using Kotlin syntax
-    @IterableMapping(elementTargetType = UserDto::class)
-    fun toDtoList(entities: List<UserEntity>): List<UserDto>
+    abstract fun toDtoList(entities: List<UserEntity>): List<UserDto>
 }
