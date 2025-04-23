@@ -10,5 +10,8 @@ data class UserUpdateRequestDto(
     val password: String? = null,
 
     @field:Email(message = "Email should be valid")
-    val email: String? = null
+    val email: String? = null,
+
+    val roleIds: Set<Long>? = null
+
 )
