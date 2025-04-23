@@ -42,9 +42,5 @@ abstract class UserMapper {
         return existingUser
     }
 
-    fun mapRolesToNames(roles: Set<RoleEntity>?): Set<String> {
-        return roles?.map { it.name }?.toSet() ?: emptySet()
-    }
-
     abstract fun toDtoList(entities: List<UserEntity>): List<UserDto>
 }
