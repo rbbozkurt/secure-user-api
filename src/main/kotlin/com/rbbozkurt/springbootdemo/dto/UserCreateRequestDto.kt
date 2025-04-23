@@ -13,5 +13,8 @@ data class UserCreateRequestDto(
     val password: String,
 
     @field:Email(message = "Email should be valid")
-    val email: String
+    val email: String,
+
+    val roleIds: Set<Long> // Required to associate roles during user creation
+
 )
