@@ -1,0 +1,17 @@
+package com.rbbozkurt.springbootdemo.dto
+
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
+
+data class UserCreateRequestDto(
+    @field:NotBlank(message = "Username is required")
+    val username: String,
+
+    @field:NotBlank(message = "Password is required")
+    @field:Size(min = 6, message = "Password must be at least 6 characters")
+    val password: String,
+
+    @field:Email(message = "Email should be valid")
+    val email: String
+)
