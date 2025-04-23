@@ -1,5 +1,6 @@
 plugins {
 	kotlin("jvm") version "1.9.25"
+	kotlin("kapt") version "1.9.25" // Required for MapStruct
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
@@ -27,6 +28,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.mapstruct:mapstruct:1.6.0")
+	kapt("org.mapstruct:mapstruct-processor:1.6.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
@@ -37,6 +40,9 @@ dependencies {
 }
 
 kotlin {
+	sourceSets.main {
+		kotlin.srcDirs("build/generated/source/kapt/main")
+	}
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
 	}
