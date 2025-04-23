@@ -1,43 +1,41 @@
 # Variables
 APP_NAME=springboot-demo
-DOCKER_IMAGE=springboot-demo
+DOCKER_IMAGE=springboot-demo-app
 DOCKER_COMPOSE_FILE=docker-compose.yml
 
-# Tell make that these are phony targets (always run them)
+# Tell make these are not real files
 .PHONY: build docker-build up down logs clean help
-
-# Targets
 
 # Build Spring Boot JAR
 build:
-	./gradlew clean bootJar
+	./gradlew bootJar
 
-# Build Docker Image
+# Build Docker Image only when needed
 docker-build: build
 	docker build -t $(DOCKER_IMAGE) .
 
-# Start using docker-compose
+# Start services (reuse existing images)
 up:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up --build
+	docker-compose -f $(DOCKER_COMPOSE_FILE) up
 
-# Stop containers
+# Stop services
 down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
-# View logs
+# Logs
 logs:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) logs -f
 
-# Clean everything (containers + images)
+# Clean all
 clean:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi all --volumes --remove-orphans
 
-# Help (default target)
+# Help message
 help:
 	@echo "Usage:"
-	@echo "  make build          -> Build Spring Boot JAR"
-	@echo "  make docker-build   -> Build Docker image (after building JAR)"
-	@echo "  make up             -> Start services with docker-compose"
-	@echo "  make down           -> Stop services"
-	@echo "  make logs           -> Tail the logs"
-	@echo "  make clean          -> Full cleanup (containers, images, volumes)"
+	@echo "  make build         -> Build Spring Boot JAR only"
+	@echo "  make docker-build  -> Build Docker image (after JAR)"
+	@echo "  make up            -> Start using existing image (no build)"
+	@echo "  make down          -> Stop containers"
+	@echo "  make logs          -> View logs"
+	@echo "  make clean         -> Clean everything"
