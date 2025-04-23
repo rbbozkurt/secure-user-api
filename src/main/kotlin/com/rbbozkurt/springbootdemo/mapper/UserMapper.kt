@@ -13,13 +13,11 @@ import org.mapstruct.*
 )
 interface UserMapper {
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = ["roleNamesToSet"])
+    @Mapping(target = "roles", source = "roles", qualifiedByName = ["mapRoleToName"])
     fun toDto(user: UserEntity): UserDto
 
-    @Named("roleNamesToSet")
-    fun roleNamesToSet(roles: Set<RoleEntity>): Set<String> {
-        return roles.map { it.name }.toSet()
-    }
+    @Named("mapRoleToName")
+    fun mapRoleToName(role: RoleEntity): String = role.name
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
