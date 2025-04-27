@@ -1,0 +1,16 @@
+# Ignore Gradle files
+.gradle/
+build/
+
+# Ignore IDE specific files
+.idea/
+*.iml
+
+# Ignore OS system files
+.DS_Store
+
+# Ignore Docker specific artifacts
+docker-compose.override.yml
+
+# Ignore logs
+*.log
