@@ -1,0 +1,34 @@
+### Create a new role
+POST http://localhost:8080/api/roles
+Content-Type: application/json
+
+{
+  "name": "ROLE_ADMIN"
+}
+
+###
+
+### Get role by ID
+GET http://localhost:8080/api/roles/1
+
+###
+
+### Update role by ID
+PUT http://localhost:8080/api/roles/1
+Content-Type: application/json
+
+{
+  "name": "ROLE_SUPER_ADMIN"
+}
+
+###
+
+### Delete role by ID
+DELETE http://localhost:8080/api/roles/1
+
+###
+
+### List all roles
+GET http://localhost:8080/api/roles
+
+###

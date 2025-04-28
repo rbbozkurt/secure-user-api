@@ -1,0 +1,43 @@
+### Create a new user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "password": "SecurePassword123!",
+  "email": "john@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "roles": [1, 2] // role ids
+}
+
+###
+
+### Get user by ID
+GET http://localhost:8080/api/users/1
+
+###
+
+### Update user by ID
+PUT http://localhost:8080/api/users/1
+Content-Type: application/json
+
+{
+  "username": "john_updated",
+  "email": "john.updated@example.com",
+  "firstName": "John",
+  "lastName": "Updated",
+  "roles": [2] // updated role ids
+}
+
+###
+
+### Delete user by ID
+DELETE http://localhost:8080/api/users/1
+
+###
+
+### List all users
+GET http://localhost:8080/api/users
+
+###

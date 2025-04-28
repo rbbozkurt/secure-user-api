@@ -1,5 +1,6 @@
 package com.rbbozkurt.springbootdemo.config
 
+import com.rbbozkurt.springbootdemo.service.auth.ApplicationUserDetailsService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -14,25 +15,16 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val securityProperties: SecurityProperties, // inject config class
+    private val applicationUserDetailsService: ApplicationUserDetailsService,
 ) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    fun userDetailsService(passwordEncoder: PasswordEncoder): UserDetailsService {
-        val user = User.builder()
-            .username(securityProperties.name) // clean usage
-            .password(passwordEncoder.encode(securityProperties.password))
-            .roles("USER")
-            .build()
-        return InMemoryUserDetailsManager(user)
-    }
-
-    @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .userDetailsService(applicationUserDetailsService)
             .authorizeHttpRequests { auth ->
                 auth.anyRequest().authenticated()
             }
@@ -41,3 +33,4 @@ class SecurityConfig(
         return http.build()
     }
 }
+
