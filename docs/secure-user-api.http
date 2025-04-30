@@ -1,0 +1,60 @@
+### Login and retrieve JWT token
+# @name login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "<your_admin_username>",
+  "password": "<your_admin_password>"
+}
+
+###
+
+### Create a new user
+POST http://localhost:8080/api/users
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123",
+  "email": "testuser@example.com",
+  "roleIds": [2]
+}
+
+###
+
+### Get user by ID
+GET http://localhost:8080/api/users/1
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+### List all users
+GET http://localhost:8080/api/users
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+### Update user by ID
+PUT http://localhost:8080/api/users/1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "email": "updated@example.com",
+  "password": "newpassword123"
+}
+
+###
+
+### Delete user by ID
+DELETE http://localhost:8080/api/users/1
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+### List roles
+GET http://localhost:8080/api/roles
+Authorization: Bearer {{login.response.body.token}}
