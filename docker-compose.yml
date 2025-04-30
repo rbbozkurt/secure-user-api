@@ -11,7 +11,7 @@ services:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
 
   app:
-    image: springboot-demo-app
+    image: secure-user-api
     build:
         context: .
         dockerfile: Dockerfile
